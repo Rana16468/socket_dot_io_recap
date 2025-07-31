@@ -7,9 +7,23 @@
   </head>
   <body>
     <h1>the quick brown fox jumps over the lazy log</h1>
-    <script src="/socket.io/socket.io.js"> </script>
+    <h1 id="time"></h1>
+    <script src="/socket.io/socket.io.js"></script>
     <script>
-         let socket= io();
+      let socket = io();
+      // server to client data transmition (server )
+      socket.on("message", (mst) => {
+        // document.write(mst.message);
+        document.getElementById("time").innerHTML = mst.timeinterval;
+      });
+
+      socket.on("myevent", (students) => {
+        // Show all student names
+        let html = students
+          .map((s) => `<p>${s.name} (${s.age}) - ${s.inst}</p>`)
+          .join("");
+        document.body.innerHTML += html;
+      });
     </script>
   </body>
 </html>
