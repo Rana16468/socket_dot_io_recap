@@ -8,6 +8,39 @@ const http = require("http");
 const server = http.createServer(app);
 
 const io = new Server(server);
+const studentList = [
+  {
+    id: 1,
+    name: "Sohel Rana",
+    age: 25,
+    inst: "Daffodil International University",
+  },
+  {
+    id: 2,
+    name: "Kaspia Hassan",
+    age: 24,
+    inst: " Daffodil International University",
+  },
+  {
+    id: 3,
+    name: " Abduallah Sahed",
+    age: 19,
+    inst: "Dhaka City Collage",
+  },
+];
+
+// grouping connection
+const nsp1 = io.of("/buy");
+nsp1.on("connection", (socket) => {
+  nsp1.emit("buyNsp", { message: "Buy Nsp  Group Section" });
+});
+
+
+const nsp2 = io.of("/sell");
+nsp2.on("connection", (socket) => {
+  nsp2.emit("sellNsp", { message: "Sell Nsp Group F Section" });
+});
+
 
 io.on("connection", (socket) => {
   console.log("New User Connected");
@@ -18,27 +51,6 @@ io.on("connection", (socket) => {
   //     message: "send the data server to client section (server---> clinet)",
   //   });
   // }, 1000);
-
-  const studentList = [
-    {
-      id: 1,
-      name: "Sohel Rana",
-      age: 25,
-      inst: "Daffodil International University",
-    },
-    {
-      id: 2,
-      name: "Kaspia Hassan",
-      age: 24,
-      inst: " Daffodil International University",
-    },
-    {
-      id: 3,
-      name: " Abduallah Sahed",
-      age: 19,
-      inst: "Dhaka City Collage",
-    },
-  ];
 
   socket.emit("myevent", studentList);
 
@@ -51,8 +63,21 @@ io.on("connection", (socket) => {
     });
   }, 2000);
 
+  //   data recivied  frontend to backend
+
+  // socket.on("message", (mst) => {
+  //   console.log(mst);
+  // });
+
+  socket.on("student", (mst) => {
+    console.log(mst);
+  });
+
   socket.on("disconnect", () => {
     console.log("user  disconnected");
+  });
+  io.sockets.emit("broadcast", {
+    message: "Hellow This BroadCasing By the All Users",
   });
 });
 
